@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collective Agreements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Smooth hover shadow animation */
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-white shadow p-6 mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 text-center">Collective Agreements</h1>
+    <p class="text-center text-gray-500 mt-2">Click a company to view its collective agreement</p>
+    <div class="mt-4 flex justify-center">
+      <input type="text" id="search" placeholder="Search companies..." 
+        class="border border-gray-300 rounded-lg p-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- Company cards will be injected here -->
+  </main>
+
+  <script>
+    const companies = [
+      "Crown Law Office",
+      "Department of Internal Affairs",
+      "Kainga Ora",
+      "KiwiBank",
+      "Land Information New Zealand",
+      "Ministry of Business, Innovation & Employment",
+      "Ministry for the Environment",
+      "Ministry of Justice",
+      "Ministry of Social Development",
+      "Ministry of Transport",
+      "Waka Kotahi",
+      "WorkSafe"
+    ];
+
+    const container = document.querySelector("main");
+
+    function createCard(company) {
+      // Safe file name for URLs (replace spaces with %20)
+      const encodedCompany = encodeURIComponent(company);
+
+      const card = document.createElement("a");
+      card.href = `CEAs/${encodedCompany}/ca.pdf`;
+      card.target = "_blank";
+      card.className = "card bg-white rounded-xl shadow p-4 flex flex-col items-center text-center hover:shadow-lg transition-transform duration-200";
+
+      const img = document.createElement("img");
+      img.src = `CEAs/${encodedCompany}/logo.svg`;
+      img.alt = `${company} logo`;
+      img.className = "w-24 h-24 object-contain mb-4";
+      img.onerror = () => { img.src = `CEAs/${encodedCompany}/logo.png`; };
+      
+      const name = document.createElement("h2");
+      name.textContent = company;
+      name.className = "text-lg font-semibold text-gray-800";
+
+      card.appendChild(img);
+      card.appendChild(name);
+      return card;
+    }
+
+    function renderCompanies(filter = "") {
+      container.innerHTML = "";
+      companies
+        .filter(c => c.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(c => container.appendChild(createCard(c)));
+    }
+
+    renderCompanies();
+
+    // Search functionality
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("input", (e) => {
+      renderCompanies(e.target.value);
+    });
+  </script>
+</body>
+</html>
